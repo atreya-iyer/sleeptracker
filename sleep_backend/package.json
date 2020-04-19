@@ -1,0 +1,12 @@
+{
+  "name": "sleep_backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "avi8, esf76",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "firebase-admin": "^7.2.0"
+  }
+}
