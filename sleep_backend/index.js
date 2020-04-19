@@ -15,12 +15,22 @@ const app = express();
 app.use(bodyParser.json());
 
 const db = admin.firestore();
+const usersCollection = db.collection('users');
 
 app.get('/', (req, res) => {
     res.send('success!');
 });
 
-// const album = db.collection('songs');
+app.get('/getUsers', async (req, res) => {
+    const allUsers = await usersCollection.get();
+    const users = [];
+    for (let doc of allUsers.docs) {
+        let user = doc.data();
+        user.id=doc.id;
+        users.push(user);
+    }
+    res.send(users);
+});
 
 // app.post('/createSong', function (req, res) {
 //   const song = req.body; // parse w bodyparser
@@ -55,4 +65,4 @@ app.get('/', (req, res) => {
 //   res.send('Deleted song "'+id+'"');
 // });
 
-app.listen(8080, function () { console.log('app started') });
+app.listen(8080, function () { console.log('app started - go to http://localhost:8080/') });
