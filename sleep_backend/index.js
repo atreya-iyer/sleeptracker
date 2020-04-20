@@ -21,6 +21,25 @@ app.get('/', (req, res) => {
     res.send('success!');
 });
 
+app.post('/createUser', async (req, res) => {
+    let success = '';
+    const userInfo = req.body; // parse w bodyparser
+    if (typeof userInfo === 'undefined') {res.send('need request body!'); return;}
+
+    const email = userInfo.email.trim();
+    const password = userInfo.password.trim();
+    // check no duplicate email? hacking someone's acc by upserting a new password would be pretty sick
+    if (typeof email === 'undefined' || typeof password === 'undefined')
+        {res.send('missing email or password!'); return;}
+
+    let userRef = usersCollection.doc();
+    let info = {email: email, password: password, name: "", goal: 0, active: true};
+    userRef.set(info);
+    let id = userRef.id;
+    success = 'success creating user with email '.concat(email).concat(' and id '.concat(id));
+    res.send(success);
+});
+
 // see https://firebase.google.com/docs/reference/node/firebase.auth.Auth and https://firebase.google.com/docs/auth/web/google-signin
 // see https://firebase.google.com/docs/auth/web/firebaseui?authuser=1 for UI version
 // const firebase = require('firebase');
