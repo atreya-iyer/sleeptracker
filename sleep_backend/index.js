@@ -21,6 +21,31 @@ app.get('/', (req, res) => {
     res.send('success!');
 });
 
+
+// const firebase = require('firebase');
+// app.post('/createAccount', (req, res) => {
+//     let success = '';
+//     const loginInfo = req.body; // parse w bodyparser
+//     if (typeof loginInfo === 'undefined') success = 'need request body!';
+//     else {
+//         const email = loginInfo.email;
+//         const password = loginInfo.password;
+//         if (typeof email === 'undefined' || typeof password === 'undefined') success = 'missing email or password!';
+//         else {
+//             success = 'success creating user with email '.concat(email);
+//             firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+//                 // Handle Errors here.
+//                 let errorCode = error.code;
+//                 let errorMessage = error.message;
+//                 // ...
+//                 success = 'error: '.concat(errorMessage);
+//             });
+//         }
+//     }
+//     res.send(success);
+// });
+
+
 app.get('/getUsers', async (req, res) => {
     const allUsers = await usersCollection.get();
     const users = [];

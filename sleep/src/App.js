@@ -24,3 +24,23 @@ function App() {
 }
 
 export default App;
+
+
+
+// const admin = require('firebase-admin');
+// const firebase = require('firebase');
+// const firebaseui = require('firebaseui');
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+//   databaseURL: "https://sleeptracker-7640d.firebaseio.com"
+// });
+// const ui = new firebaseui.auth.AuthUI(firebase.auth());
+/* {
+  ui.start('#firebaseui-auth-container', {
+    signInOptions: [
+      firebase.auth.EmailAuthProvider.PROVIDER_ID,
+    //   firebase.auth.GoogleAuthProvider.PROVIDER_ID
+    ],
+    // Other config options...
+  })
+} */
