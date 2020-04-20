@@ -21,7 +21,8 @@ app.get('/', (req, res) => {
     res.send('success!');
 });
 
-
+// see https://firebase.google.com/docs/reference/node/firebase.auth.Auth and https://firebase.google.com/docs/auth/web/google-signin
+// see https://firebase.google.com/docs/auth/web/firebaseui?authuser=1 for UI version
 // const firebase = require('firebase');
 // app.post('/createAccount', (req, res) => {
 //     let success = '';
