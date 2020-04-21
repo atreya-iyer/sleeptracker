@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 
 // docs, for future reference:
 //      https://firebase.google.com/docs/firestore/quickstart?authuser=0
+//https://firebase.google.com/docs/web/setup?authuser=1v for starting firebase
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -21,8 +22,49 @@ app.get('/', (req, res) => {
     res.send('success!');
 });
 
+app.get('/users', async (req, res) => {
+    const allUsers = await usersCollection.get();
+    const users = [];
+    for (let doc of allUsers.docs) {
+        let user = doc.data();
+        user.id=doc.id;
+        users.push(user);
+    }
+    res.send(users);
+});
+
+
+
+app.post('/sleeps/start', (req, res) => {
+    // given uid in post body, creates a new sleep for that uid at current start time 
+    const userInfo = req.body;
+    if (typeof userInfo === 'undefined') {res.send('need request body!'); return;}
+    const uid = userInfo.uid; const start_time = userInfo.start_time;
+    if (typeof uid === 'undefined') {res.send('missing required field!'); return;}
+    // if (typeof uid === 'undefined' || typeof start_time === 'undefined') {res.send('missing required field!'); return;}
+
+    // post sleep to user 
+    //   let songRef = album.doc();
+    //   songRef.set(song);
+    //   let id = songRef.id;
+    // apparently we're using a "subcollection"
+    let sleepRef = usersCollection.doc(uid).collection('sleeps').doc();
+    // set sleep time here. no idea what .TIMESTAMP will look like
+    // we haven't imported a firebase so idk if this will work
+    // var ui = new firebaseui.auth.AuthUI(firebase.auth()); is this the line to start it?
+    // oh if we want to use their local time, we can have time sent from frontend?
+    // we could send firebase a js datetime object, but frontend probably can't send that
+    // maybe we'll use server time for now
+    
+    // firebase.database.ServerValue.TIMESTAMP
+    let sleepInfo = {start: new Date(), in_progress: true};
+    sleepRef.set(sleepInfo);
+    res.send('whatever');
+
+});
+
+
 app.post('/createUser', async (req, res) => {
-    let success = '';
     const userInfo = req.body; // parse w bodyparser
     if (typeof userInfo === 'undefined') {res.send('need request body!'); return;}
 
@@ -36,7 +78,7 @@ app.post('/createUser', async (req, res) => {
     let info = {email: email, password: password, name: "", goal: 0, active: true};
     userRef.set(info);
     let id = userRef.id;
-    success = 'success creating user with email '.concat(email).concat(' and id '.concat(id));
+    let success = 'success creating user with email '.concat(email).concat(' and id '.concat(id));
     res.send(success);
 });
 
@@ -66,16 +108,6 @@ app.post('/createUser', async (req, res) => {
 // });
 
 
-app.get('/getUsers', async (req, res) => {
-    const allUsers = await usersCollection.get();
-    const users = [];
-    for (let doc of allUsers.docs) {
-        let user = doc.data();
-        user.id=doc.id;
-        users.push(user);
-    }
-    res.send(users);
-});
 
 // app.post('/createSong', function (req, res) {
 //   const song = req.body; // parse w bodyparser
