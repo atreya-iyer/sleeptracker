@@ -43,20 +43,11 @@ app.post('/sleeps/start', (req, res) => {
     if (typeof uid === 'undefined') {res.send('missing required field!'); return;}
     // if (typeof uid === 'undefined' || typeof start_time === 'undefined') {res.send('missing required field!'); return;}
 
-    // post sleep to user 
-    //   let songRef = album.doc();
-    //   songRef.set(song);
-    //   let id = songRef.id;
     // apparently we're using a "subcollection"
     let sleepRef = usersCollection.doc(uid).collection('sleeps').doc();
-    // set sleep time here. no idea what .TIMESTAMP will look like
-    // we haven't imported a firebase so idk if this will work
-    // var ui = new firebaseui.auth.AuthUI(firebase.auth()); is this the line to start it?
-    // oh if we want to use their local time, we can have time sent from frontend?
-    // we could send firebase a js datetime object, but frontend probably can't send that
-    // maybe we'll use server time for now
     
-    // firebase.database.ServerValue.TIMESTAMP
+    // firebase.database.ServerValue.TIMESTAMP --> but haven't imported firebase
+    // might have frontend send time?
     let sleepInfo = {start: new Date(), in_progress: true};
     sleepRef.set(sleepInfo);
     res.send('whatever');
@@ -64,23 +55,23 @@ app.post('/sleeps/start', (req, res) => {
 });
 
 
-app.post('/createUser', async (req, res) => {
-    const userInfo = req.body; // parse w bodyparser
-    if (typeof userInfo === 'undefined') {res.send('need request body!'); return;}
+// app.post('/createUser', async (req, res) => {
+//     const userInfo = req.body; // parse w bodyparser
+//     if (typeof userInfo === 'undefined') {res.send('need request body!'); return;}
 
-    const email = userInfo.email.trim();
-    const password = userInfo.password.trim();
-    // check no duplicate email? hacking someone's acc by upserting a new password would be pretty sick
-    if (typeof email === 'undefined' || typeof password === 'undefined')
-        {res.send('missing email or password!'); return;}
+//     const email = userInfo.email.trim();
+//     const password = userInfo.password.trim();
+//     // check no duplicate email? hacking someone's acc by upserting a new password would be pretty sick
+//     if (typeof email === 'undefined' || typeof password === 'undefined')
+//         {res.send('missing email or password!'); return;}
 
-    let userRef = usersCollection.doc();
-    let info = {email: email, password: password, name: "", goal: 0, active: true};
-    userRef.set(info);
-    let id = userRef.id;
-    let success = 'success creating user with email '.concat(email).concat(' and id '.concat(id));
-    res.send(success);
-});
+//     let userRef = usersCollection.doc();
+//     let info = {email: email, password: password, name: "", goal: 0, active: true};
+//     userRef.set(info);
+//     let id = userRef.id;
+//     let success = 'success creating user with email '.concat(email).concat(' and id '.concat(id));
+//     res.send(success);
+// });
 
 // see https://firebase.google.com/docs/reference/node/firebase.auth.Auth and https://firebase.google.com/docs/auth/web/google-signin
 // see https://firebase.google.com/docs/auth/web/firebaseui?authuser=1 for UI version
