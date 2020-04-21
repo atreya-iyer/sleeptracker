@@ -3,51 +3,51 @@ const serviceAccount = require('./service-account.json');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-var firebase = require('firebase');
-var firebaseui = require('firebaseui');
+// var firebase = require('firebase');
+// var firebaseui = require('firebaseui');
 
-var ui = new firebaseui.auth.AuthUI(firebase.auth());
+// var ui = new firebaseui.auth.AuthUI(firebase.auth());
 
-var uiConfig = {
-  callbacks: {
-    signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-      // User successfully signed in.
-      // Return type determines whether we continue the redirect automatically
-      // or whether we leave that to developer to handle.
-      return true;
-    },
-    uiShown: function() {
-      // The widget is rendered.
-      // Hide the loader.
-      document.getElementById('loader').style.display = 'none';
-    }
-  },
-  // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
-  signInFlow: 'popup',
-  signInSuccessUrl: '<url-to-redirect-to-on-success>',
-  signInOptions: [
-    // Leave the lines as is for the providers you want to offer your users.
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    firebase.auth.EmailAuthProvider.PROVIDER_ID
-  ],
-  // Terms of service url.
-  tosUrl: '<your-tos-url>',
-  // Privacy policy url.
-  privacyPolicyUrl: '<your-privacy-policy-url>'
-};
+// var uiConfig = {
+//   callbacks: {
+//     signInSuccessWithAuthResult: function(authResult, redirectUrl) {
+//       // User successfully signed in.
+//       // Return type determines whether we continue the redirect automatically
+//       // or whether we leave that to developer to handle.
+//       return true;
+//     },
+//     uiShown: function() {
+//       // The widget is rendered.
+//       // Hide the loader.
+//       document.getElementById('loader').style.display = 'none';
+//     }
+//   },
+//   // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+//   signInFlow: 'popup',
+//   signInSuccessUrl: '<url-to-redirect-to-on-success>',
+//   signInOptions: [
+//     // Leave the lines as is for the providers you want to offer your users.
+//     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+//     firebase.auth.EmailAuthProvider.PROVIDER_ID
+//   ],
+//   // Terms of service url.
+//   tosUrl: '<your-tos-url>',
+//   // Privacy policy url.
+//   privacyPolicyUrl: '<your-privacy-policy-url>'
+// };
 
 
-ui.start('#firebaseui-auth-container', {
-  signInFlow: 'popup',
-  signInSuccessUrl: '<url-to-redirect-to-on-success>',
-  signInOptions: [
-    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    firebase.auth.EmailAuthProvider.PROVIDER_ID
-  ],
-  // Other config options...
-});
+// ui.start('#firebaseui-auth-container', {
+//   signInFlow: 'popup',
+//   signInSuccessUrl: '<url-to-redirect-to-on-success>',
+//   signInOptions: [
+//     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+//     firebase.auth.EmailAuthProvider.PROVIDER_ID
+//   ],
+//   // Other config options...
+// });
 
-ui.start('#firebaseui-auth-container', uiConfig);
+// ui.start('#firebaseui-auth-container', uiConfig);
 
 // docs, for future reference:
 //      https://firebase.google.com/docs/firestore/quickstart?authuser=0
@@ -84,7 +84,7 @@ app.get('/users', async (req, res) => {
 app.post('/sleeps/start', (req, res) => {
     // given uid in post body, creates a new sleep for that uid at current start time 
     const userInfo = req.body;
-    if (typeof userInfo === 'undefined') {res.send('need request body!'); return;}
+    if (typeof userInfo === 'undefined') {res.send('need request body!'); return;} // I don't think this works...
     const uid = userInfo.uid; const start_time = userInfo.start_time;
     if (typeof uid === 'undefined') {res.send('missing required field!'); return;}
     // if (typeof uid === 'undefined' || typeof start_time === 'undefined') {res.send('missing required field!'); return;}
@@ -98,6 +98,35 @@ app.post('/sleeps/start', (req, res) => {
     sleepRef.set(sleepInfo);
     res.send('whatever');
 
+});
+
+
+// how to query: see https://googleapis.dev/nodejs/firestore/latest/CollectionReference.html
+// https://googleapis.dev/nodejs/firestore/latest/Query.html
+
+app.post('/sleeps/end', async (req, res) => {
+    const userInfo = req.body;
+    const uid = userInfo.uid;
+    if (typeof uid === 'undefined') {res.send('missing required field!'); return;}
+
+    const sleepCollection = await usersCollection.doc(uid).collection('sleeps');
+    // find the single most recent in_progress sleep
+    const sleeps = await sleepCollection.where('in_progress', '==', true).orderBy('start', "desc").limit(1).get();
+    let sleep = {};
+    let s_id = null;
+    for (let doc of sleeps.docs) {
+        // if you found a sleep, take its data
+        sleep = doc.data();
+        s_id = doc.id;
+        sleep.start = sleep.start.toDate(); // this makes it a js Date; but do whatever format
+    }
+    // now update!
+    sleep.end = new Date();
+    sleep.in_progress = false;
+    if (s_id === null) sleepCollection.doc().set(sleep); // update sleep
+    else sleepCollection.doc(s_id).set(sleep); // if somehow no sleeps in progress, make a new one and end it
+
+    res.send('successfully ended a sleep');
 });
 
 
