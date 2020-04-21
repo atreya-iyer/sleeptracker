@@ -19,21 +19,21 @@ function App() {
         };
         firebase.initializeApp(firebaseConfig);
       </script> */}
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
 
+      <script src="/__/firebase/7.14.1/firebase-app.js"></script>
+
+
+      <script src="/__/firebase/7.14.1/firebase-analytics.js"></script>
+
+
+      <script src="/__/firebase/7.14.1/firebase-auth.js"></script>
+      <script src="/__/firebase/7.14.1/firebase-firestore.js"></script>
+
+      <script src="/__/firebase/init.js"></script>
+
+      <h1>Welcome to My Awesome App</h1>
+      <div id="firebaseui-auth-container"></div>
+      <div id="loader">Loading...</div>
     </div>
   );
 }
