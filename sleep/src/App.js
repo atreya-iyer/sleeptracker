@@ -6,16 +6,20 @@ function App() {
   return (
     <div className="App">
 
-        <script src="/__/firebase/7.14.1/firebase-app.js"></script>
+      <script src="/__/firebase/7.14.1/firebase-app.js"></script>
 
 
-        <script src="/__/firebase/7.14.1/firebase-analytics.js"></script>
+      <script src="/__/firebase/7.14.1/firebase-analytics.js"></script>
 
 
-        <script src="/__/firebase/7.14.1/firebase-auth.js"></script>
-        <script src="/__/firebase/7.14.1/firebase-firestore.js"></script>
+      <script src="/__/firebase/7.14.1/firebase-auth.js"></script>
+      <script src="/__/firebase/7.14.1/firebase-firestore.js"></script>
 
-        <script src="/__/firebase/init.js"></script>
+      <script src="/__/firebase/init.js"></script>
+
+      <h1>Welcome to My Awesome App</h1>
+      <div id="firebaseui-auth-container"></div>
+      <div id="loader">Loading...</div>
     </div>
   );
 }
