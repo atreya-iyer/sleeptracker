@@ -67,6 +67,8 @@ const usersCollection = db.collection('users');
 // todo -> function that has "body value retrieval" -> [success, uid, id] = retr(body, ['uid', 'id']);
 // todo -> clean up "const" vs "let" oops
 // todo -> which are awaits?
+// todo -> catch/handle errors lmao
+// todo -> turn loops into maps
 
 app.get('/', (req, res) => {
     res.send('success!');
@@ -100,7 +102,7 @@ app.post('/sleeps/start', (req, res) => {
     // might have frontend send time?
     let sleepInfo = {start: new Date(), in_progress: true};
     sleepRef.set(sleepInfo);
-    res.send('whatever');
+    res.send('started sleep');
 
 });
 
@@ -144,7 +146,7 @@ app.get('/sleeps', async (req, res) => {
     // retrieve most-recently-started sleeps for a user
     let sleepCollection = usersCollection.doc(uid).collection('sleeps').orderBy('start', 'desc');
     // if given a number of results to return, set that limit
-    if (query.num_results !== 'undefined') sleepCollection = sleepCollection.limit(query.num_results);
+    if (typeof query.num_results !== 'undefined') sleepCollection = sleepCollection.limit(query.num_results);
 
     // retrieve and return list
     const sleepsObj = await sleepCollection.get();
@@ -152,15 +154,13 @@ app.get('/sleeps', async (req, res) => {
     for (let doc of sleepsObj.docs) {
         let sleep = doc.data();
         sleep.sleepid = doc.id;
+        sleep.start = sleep.start.toDate(); // this makes it a js Date; but do whatever format
+        sleep.end = sleep.end.toDate();
         sleeps.push(sleep);
     }
     res.send(sleeps);
 });
 
-
-// there's something like album.doc(id).update(uJson);
-//i googled it and apparently put requsts are used for this? not sure
-// 
 app.put('/sleeps/:sleepid', async(req, res) => {
     const userInfo = req.body;
     const ustart = req.body.start;
@@ -168,13 +168,17 @@ app.put('/sleeps/:sleepid', async(req, res) => {
     const uid = req.body.uid;
     const usleepid = req.params.sleepid;
     if (typeof uid === 'undefined' || typeof usleepid === 'undefined')
-      {res.send('missing required field!'); return;}
-
+    {res.send('missing required field!'); return;}
+    
     const upsleep= await usersCollection.doc(uid).collection('sleeps').doc(usleepid);
     upsleep.update(
-      {
+        {
+        // it's mad if I don't define both those fields. if you want we can require the frontend to pass them. just have to decide
         start: ustart,
         end: uend,
+        // also it's mad about something in upsleep so maybe don't pass everything over?
+        // "Couldn't serialize object of type "Firestore" (found in field _firestore). Firestore doesn't support JavaScript objects with custom prototypes (i.e. objects that were created via the "new" operator)."
+        // ^ whatever that means
         ...upsleep
       }
     );
