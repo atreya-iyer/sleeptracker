@@ -156,6 +156,7 @@ app.get('/sleeps', async (req, res) => {
         sleep.sleepid = doc.id;
         sleep.start = sleep.start.toDate(); // this makes it a js Date; but do whatever format
         sleep.end = sleep.end.toDate();
+        sleep.duration = (sleep.end - sleep.start) / (1000*3600); // in hours
         sleeps.push(sleep);
     }
     res.send(sleeps);
