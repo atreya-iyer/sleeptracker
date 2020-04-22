@@ -177,11 +177,8 @@ app.put('/sleeps/:sleepid', async(req, res) => {
     upsleep.update(
         {
         // it's mad if I don't define both those fields. if you want we can require the frontend to pass them. just have to decide
-        start: ustart,
-        end: uend,
-        // also it's mad about something in upsleep so maybe don't pass everything over?
-        // "Couldn't serialize object of type "Firestore" (found in field _firestore). Firestore doesn't support JavaScript objects with custom prototypes (i.e. objects that were created via the "new" operator)."
-        // ^ whatever that means
+        start: new Date(ustart), // no idea if this'll work
+        end: new Date(uend),
         in_progress: false
       }
     );
