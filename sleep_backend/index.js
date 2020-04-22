@@ -64,6 +64,10 @@ app.use(bodyParser.json());
 const db = admin.firestore();
 const usersCollection = db.collection('users');
 
+// todo -> function that has "body value retrieval" -> [success, uid, id] = retr(body, ['uid', 'id']);
+// todo -> clean up "const" vs "let" oops
+// todo -> which are awaits?
+
 app.get('/', (req, res) => {
     res.send('success!');
 });
@@ -123,12 +127,59 @@ app.post('/sleeps/end', async (req, res) => {
     // now update!
     sleep.end = new Date();
     sleep.in_progress = false;
-    if (s_id === null) sleepCollection.doc().set(sleep); // update sleep
-    else sleepCollection.doc(s_id).set(sleep); // if somehow no sleeps in progress, make a new one and end it
+    // if somehow no sleeps in progress, make a new one and end it
+    if (s_id === null) sleepCollection.doc().set({start: new Date(), ...sleep});
+    // otherwise update sleep as expected
+    else sleepCollection.doc(s_id).set(sleep);
 
     res.send('successfully ended a sleep');
 });
 
+app.get('/sleeps', async (req, res) => {
+    const query = req.body;
+    // identify user
+    const uid = query.uid;
+    if (typeof uid === 'undefined') {res.send('missing required field!'); return;}
+    
+    // retrieve most-recently-started sleeps for a user
+    let sleepCollection = usersCollection.doc(uid).collection('sleeps').orderBy('start', 'desc');
+    // if given a number of results to return, set that limit
+    if (query.num_results !== 'undefined') sleepCollection = sleepCollection.limit(query.num_results);
+
+    // retrieve and return list
+    const sleepsObj = await sleepCollection.get();
+    const sleeps = [];
+    for (let doc of sleepsObj.docs) {
+        let sleep = doc.data();
+        sleep.sleepid = doc.id;
+        sleeps.push(sleep);
+    }
+    res.send(sleeps);
+});
+
+
+// there's something like album.doc(id).update(uJson);
+//i googled it and apparently put requsts are used for this? not sure
+// 
+app.put('/sleeps/:sleepid', async(req, res) => {
+    const userInfo = req.body;
+    const ustart = req.body.start;
+    const uend = req.body.end;
+    const uid = req.body.uid;
+    const usleepid = req.params.sleepid;
+    if (typeof uid === 'undefined' || typeof usleepid === 'undefined')
+      {res.send('missing required field!'); return;}
+
+    const upsleep= await usersCollection.doc(uid).collection('sleeps').doc(usleepid);
+    upsleep.update(
+      {
+        start: ustart,
+        end: uend,
+        ...upsleep
+      }
+    );
+    
+})
 
 // app.post('/createUser', async (req, res) => {
 //     const userInfo = req.body; // parse w bodyparser
