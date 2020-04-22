@@ -171,7 +171,9 @@ app.put('/sleeps/:sleepid', async(req, res) => {
     if (typeof uid === 'undefined' || typeof usleepid === 'undefined')
     {res.send('missing required field!'); return;}
     
-    const upsleep= await usersCollection.doc(uid).collection('sleeps').doc(usleepid);
+    const user= await usersCollection.doc(uid)
+    const usercollec = await user.collection('sleeps')
+    const upsleep = await usercollec.doc(usleepid);
     upsleep.update(
         {
         // it's mad if I don't define both those fields. if you want we can require the frontend to pass them. just have to decide
@@ -180,11 +182,27 @@ app.put('/sleeps/:sleepid', async(req, res) => {
         // also it's mad about something in upsleep so maybe don't pass everything over?
         // "Couldn't serialize object of type "Firestore" (found in field _firestore). Firestore doesn't support JavaScript objects with custom prototypes (i.e. objects that were created via the "new" operator)."
         // ^ whatever that means
-        ...upsleep
+        in_progress: false
       }
+    );
+    res.send(
+        'updated'
     );
     
 })
+
+app.delete('/sleeps/:sleepid', (req, res) => {
+    const userInfo = req.body;
+    const uid = req.body.uid;
+    const usleepid = req.params.sleepid;
+    if (typeof uid === 'undefined' || typeof usleepid === 'undefined')
+        {res.send('missing required field!'); return;}
+    
+    const user = usersCollection.doc(uid).collection('sleeps').doc(usleepid).delete();
+    res.send('deleted sleep with id '.concat(usleepid));
+});
+
+
 
 // app.post('/createUser', async (req, res) => {
 //     const userInfo = req.body; // parse w bodyparser
