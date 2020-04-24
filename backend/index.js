@@ -20,17 +20,20 @@ app.use(bodyParser.json());
 const db = admin.firestore();
 const usersCollection = db.collection('users');
 
+const str_missing = 'missing required field!'
+
 // todo -> function that has "body value retrieval" -> [success, uid, id] = retr(body, ['uid', 'id']);
 // todo -> clean up "const" vs "let" oops
 // todo -> which are awaits?
 // todo -> catch/handle errors lmao
 // todo -> turn loops into maps
 // todo -> other user data so  can display name stuff
+// todo -> stuff from latest lecture
 
 const retr = (body, fields) => {
     let missing = false;
-    const vals = arr.map(v => {
-        if (typeof body[v] === 'undefined') missing = true; else return body[v];
+    const vals = fields.map(v => {
+        if (typeof body[v] === 'undefined') missing = true; return body[v];
     })
     return [missing, vals];
 };
@@ -53,12 +56,11 @@ app.get('/users', async (req, res) => {
 
 
 app.post('/sleeps/start', (req, res) => {
-    // given uid in post body, creates a new sleep for that uid at current start time 
-    const userInfo = req.body;
-    if (typeof userInfo === 'undefined') {res.send('need request body!'); return;} // I don't think this works...
-    const uid = userInfo.uid; const start_time = userInfo.start_time;
-    if (typeof uid === 'undefined') {res.send('missing required field!'); return;}
-    // if (typeof uid === 'undefined' || typeof start_time === 'undefined') {res.send('missing required field!'); return;}
+    // // given uid in post body, creates a new sleep for that uid at current start time 
+    const body = req.body;
+    let [missing, [uid, start_time]] = retr(body, ['uid', 'start_time']);
+    if (missing) {res.send(str_missing); return;}
+    // if (typeof body === 'undefined') {res.send('need request body!'); return;} // I don't think this works...
 
     // apparently we're using a "subcollection"
     let sleepRef = usersCollection.doc(uid).collection('sleeps').doc();
@@ -78,7 +80,7 @@ app.post('/sleeps/start', (req, res) => {
 app.post('/sleeps/end', async (req, res) => {
     const userInfo = req.body;
     const uid = userInfo.uid;
-    if (typeof uid === 'undefined') {res.send('missing required field!'); return;}
+    if (typeof uid === 'undefined') {res.send(str_missing); return;}
 
     const sleepCollection = await usersCollection.doc(uid).collection('sleeps');
     // find the single most recent in_progress sleep
@@ -103,15 +105,15 @@ app.post('/sleeps/end', async (req, res) => {
 });
 
 app.get('/sleeps', async (req, res) => {
-    const query = req.body;
+    const body = req.body;
     // identify user
-    const uid = query.uid;
-    if (typeof uid === 'undefined') {res.send('missing required field!'); return;}
+    let [missing, [uid]] = retr(body, ['uid']);
+    if (missing) {res.send(str_missing); return;}
     
     // retrieve most-recently-started sleeps for a user
     let sleepCollection = usersCollection.doc(uid).collection('sleeps').orderBy('start', 'desc');
     // if given a number of results to return, set that limit
-    if (typeof query.num_results !== 'undefined') sleepCollection = sleepCollection.limit(query.num_results);
+    if (typeof body.num_results !== 'undefined') sleepCollection = sleepCollection.limit(body.num_results);
 
     // retrieve and return list
     const sleepsObj = await sleepCollection.get();
@@ -120,29 +122,29 @@ app.get('/sleeps', async (req, res) => {
         let sleep = doc.data();
         sleep.sleepid = doc.id;
         sleep.start = sleep.start.toDate(); // this makes it a js Date; but do whatever format
-        sleep.end = sleep.end.toDate();
-        sleep.duration = (sleep.end - sleep.start) / (1000*3600); // in hours
+        if (!sleep.in_progress) {
+            sleep.end = sleep.end.toDate();
+            sleep.duration = (sleep.end - sleep.start) / (1000*3600); // in hours
+        }
         sleeps.push(sleep);
     }
     res.send(sleeps);
 });
 
-app.put('/sleeps/:sleepid', async(req, res) => {
-    const userInfo = req.body;
-    const ustart = req.body.start;
-    const uend = req.body.end;
-    const uid = req.body.uid;
-    const usleepid = req.params.sleepid;
-    if (typeof uid === 'undefined' || typeof usleepid === 'undefined')
-    {res.send('missing required field!'); return;}
+app.put('/sleeps/:sleepid', (req, res) => {
+    const body = req.body;
+    let [missing, [uid]] = retr(body, ['uid']);
+    let [missing2, [ustart, uend]] = retr(body, ['start', 'end']);
+    if (missing || missing2) {res.send(str_missing); return;}
+    const sleepid = req.params.sleepid;
     
-    const user= await usersCollection.doc(uid)
-    const usercollec = await user.collection('sleeps')
-    const upsleep = await usercollec.doc(usleepid);
+    const user = usersCollection.doc(uid)
+    const usercollec = user.collection('sleeps')
+    const upsleep = usercollec.doc(sleepid);
     upsleep.update(
         {
-        // it's mad if I don't define both those fields. if you want we can require the frontend to pass them. just have to decide
-        start: new Date(ustart), // no idea if this'll work
+            // requires all fields currently
+        start: new Date(ustart),
         end: new Date(uend),
         in_progress: false
       }
@@ -154,14 +156,13 @@ app.put('/sleeps/:sleepid', async(req, res) => {
 })
 
 app.delete('/sleeps/:sleepid', (req, res) => {
-    const userInfo = req.body;
-    const uid = req.body.uid;
-    const usleepid = req.params.sleepid;
-    if (typeof uid === 'undefined' || typeof usleepid === 'undefined')
-        {res.send('missing required field!'); return;}
+    const body = req.body;
+    let [missing, [uid]] = retr(body, ['uid']);
+    const sleepid = req.params.sleepid;
+    if (missing) {res.send(str_missing); return;}
     
-    const user = usersCollection.doc(uid).collection('sleeps').doc(usleepid).delete();
-    res.send('deleted sleep with id '.concat(usleepid));
+    usersCollection.doc(uid).collection('sleeps').doc(sleepid).delete();
+    res.send('deleted sleep with id '.concat(sleepid));
 });
 
 
