@@ -165,7 +165,16 @@ app.delete('/sleeps/:sleepid', (req, res) => {
     res.send('deleted sleep with id '.concat(sleepid));
 });
 
-
+// TIMEZONES:
+// js date object stores in epoch time
+// js operations can convert to local time zone (ie user timezone if client-side)
+// firebase also seems to store in epoch time (the web UI converts to local time)
+// so other than potential client-side conversion, we don't need to worry! they 
+//          probably don't care what timezone they slept in
+//      And data they took in a diff timezone will be off, but whatever
+app.get('/test1', (req, res) => {
+    res.send(new Date());
+})
 
 // app.post('/createUser', async (req, res) => {
 //     const userInfo = req.body; // parse w bodyparser
