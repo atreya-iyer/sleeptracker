@@ -2,6 +2,9 @@
   "name": "sleep_backend",
   "version": "1.0.0",
   "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "author": "avi8, esf76",
   "license": "MIT",
   "dependencies": {

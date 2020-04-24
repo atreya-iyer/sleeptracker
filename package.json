@@ -1,0 +1,17 @@
+{
+  "name": "sleep",
+  "version": "1.0.0",
+  "scripts": {
+    "server": "cd backend && yarn start",
+    "frontend": "cd frontend && yarn start",
+    "dev": "concurrently \"yarn server\" \"yarn frontend\""
+  },
+  "main": "index.js",
+  "repository": "https://github.coecis.cornell.edu/avi8/info1998proj.git",
+  "author": "Elisabeth Finkel <esf76@cornell.edu>; Atreya Iyer <avi8@cornell.edu>",
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^5.1.0"
+  }
+
+}
