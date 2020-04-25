@@ -11,7 +11,7 @@
   "author": "Elisabeth Finkel <esf76@cornell.edu>; Atreya Iyer <avi8@cornell.edu>",
   "license": "MIT",
   "dependencies": {
-    "concurrently": "^5.1.0"
+    "concurrently": "^5.1.0",
+    "firebase-tools": "^8.1.1"
   }
-
 }
