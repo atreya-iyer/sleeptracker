@@ -104,16 +104,16 @@ app.post('/sleeps/end', async (req, res) => {
     res.send('successfully ended a sleep');
 });
 
+// app.get('/sleeps:uid&:num_results', async (req, res) => {
 app.get('/sleeps', async (req, res) => {
-    const body = req.body;
-    // identify user
-    let [missing, [uid]] = retr(body, ['uid']);
-    if (missing) {res.send(str_missing); return;}
+    const uid = req.query.uid;
+    const num_results = req.query.num_results;
+    // handle missing uid todo
     
     // retrieve most-recently-started sleeps for a user
     let sleepCollection = usersCollection.doc(uid).collection('sleeps').orderBy('start', 'desc');
     // if given a number of results to return, set that limit
-    if (typeof body.num_results !== 'undefined') sleepCollection = sleepCollection.limit(body.num_results);
+    if (typeof num_results !== 'undefined') sleepCollection = sleepCollection.limit(parseInt(num_results));
 
     // retrieve and return list
     const sleepsObj = await sleepCollection.get();
@@ -129,6 +129,14 @@ app.get('/sleeps', async (req, res) => {
         sleeps.push(sleep);
     }
     res.send(sleeps);
+});
+
+app.get('/sleeps/inprogress', async (req, res) => {
+    const uid = req.query.uid;
+    const sleepCollection = usersCollection.doc(uid).collection('sleeps');
+    const sleeps = await sleepCollection.where('in_progress', '==', true).get();
+    res.send(sleeps.docs.length>0);
+
 });
 
 app.put('/sleeps/:sleepid', (req, res) => {
