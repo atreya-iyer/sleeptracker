@@ -16,11 +16,12 @@ export default ({uid}) => {
     const [sleeping, setSleeping] = useState(null);
     const fetchSleepingStatus = () => {
         if (!isNull(sleeping)) return;
+        if (uid==="") return; 
         axios.get('/sleeps/inprogress?uid='.concat(uid))
-        .then(res => setSleeping(res.data));
+                .then(res => setSleeping(res.data));
         console.log('fetching status');
     }
-    useEffect(() => fetchSleepingStatus(), []);
+    useEffect(() => fetchSleepingStatus(), [uid]);
     // console.log(isNull(sleeping));
     // if (isNull(sleeping)) {
     //     fetchSleepingStatus();
