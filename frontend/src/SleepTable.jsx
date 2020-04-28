@@ -1,30 +1,32 @@
-import Sleep from './Sleep';
 import React from 'react';
+import axios from 'axios';
+
+import Sleep from './Sleep';
 
 
 
-export default (sleeps) => {
-    sleeps = [
-        {start: "2020-04-28T05:44:48.697Z", end: "2020-04-28T06:44:48.697Z", sleepid: "UTgRLkz5TbBOSFRssBmA"}
-    ];
-    const updateSleep = () => {
-        // const currTime = new Date();
-        // if (sleeping===true) {
-        //     axios.post('/sleeps/start', {uid, currTime})
-        //         .then(res => setSleeping(true));
-        // } else {
-        //     axios.post('/sleeps/end', {uid, currTime})
-        //         .then(res => setSleeping(false));
-        // }
-        // axios.put('/sleeps/'+id, )
+export default ({uid, sleeps, updateData}) => {
+
+
+    const updateSleep = (sid, st, en) => {
+        // step 1: make put request
+        // axios.put(`/sleep/{sid}`, {start:st, end:en, uid})
+        
+        // step 2: update local state
+        // .then(res => {
+            updateData(sleeps.map(s => s.sid === sid ? {...s, start: st, end: en} : s));
+        // });
     };
 
-    // oh ok yeah
-    //nah dog feel free to correct me
-    //idk what im doing
+
     return (
-        <div>
-            {sleeps.map(s => (<div> <Sleep st={s.start} e={s.end} key={s.sleepid} /> </div>))}
+        <div className="past-sleeps">
+          <h2>Past sleeps</h2>
+            {sleeps.map(s => (<div> <Sleep st={s.start} en={s.end} key={s.sid} sid={s.sid} callback={updateSleep} /> </div>))}
+        </div>
+    );
+};
+
             {/* {sleeps} */}
             {/* {sleeps.map(s => <Sleep />)} */}
             {/* {sleeps.map(s => (<div> <Sleep {...s} /> </div>))} */}
@@ -43,6 +45,3 @@ export default (sleeps) => {
                     </tr>
                 </tbody>
             </table> */}
-        </div>
-    );
-};

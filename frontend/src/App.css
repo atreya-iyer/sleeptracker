@@ -2,6 +2,18 @@
   text-align: center;
 }
 
+.time-border {
+  border-radius: 10px;
+  border-color: blue;
+}
+
+.past-sleeps {
+  border: 2px solid black;
+  margin: 20px 60px;
+  padding: 20px 5px;
+  
+}
+
 /* .App-logo {
   height: 40vmin;
   pointer-events: none;

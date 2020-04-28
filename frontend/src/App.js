@@ -6,11 +6,11 @@ import Login from './Login'
 
 function App() {
 
-  const[uid, setUid] = useState("");
-  const[loggedIn, setLoggedIn] = useState(false);
+  // const[uid, setUid] = useState("");
+  // const[loggedIn, setLoggedIn] = useState(false);
   // hardcode some stuff
-  // const[uid, setUid] = useState("Hca3mdVps6Z2QvqGDuxMVlJH2zV2");
-  // const[loggedIn, setLoggedIn] = useState(true);
+  const[uid, setUid] = useState("Hca3mdVps6Z2QvqGDuxMVlJH2zV2");
+  const[loggedIn, setLoggedIn] = useState(true);
   const name = "sample person"
 
   return (

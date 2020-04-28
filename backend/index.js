@@ -122,7 +122,7 @@ app.get('/sleeps', async (req, res) => {
     const sleeps = [];
     for (let doc of sleepsObj.docs) {
         let sleep = doc.data();
-        sleep.sleepid = doc.id;
+        sleep.sid = doc.id;
         sleep.start = sleep.start.toDate(); // this makes it a js Date; but do whatever format
         if (!sleep.in_progress) {
             sleep.end = sleep.end.toDate();
