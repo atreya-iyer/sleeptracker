@@ -56,18 +56,19 @@ app.get('/users', async (req, res) => {
 
 
 app.post('/sleeps/start', (req, res) => {
+    // if (typeof req.body === 'undefined') {res.send('need request body!'); return;} // I don't think this works...
     // // given uid in post body, creates a new sleep for that uid at current start time 
-    const body = req.body;
-    let [missing, [uid, start_time]] = retr(body, ['uid', 'start_time']);
+    let [missing, [uid]] = retr(req.body, ['uid']);
+    let [missing2, [start_time]] = retr(req.body, ['currTime']);
     if (missing) {res.send(str_missing); return;}
-    // if (typeof body === 'undefined') {res.send('need request body!'); return;} // I don't think this works...
+    if (missing2) start = new Date(); else start = new Date(start_time);
 
     // apparently we're using a "subcollection"
     let sleepRef = usersCollection.doc(uid).collection('sleeps').doc();
     
     // firebase.database.ServerValue.TIMESTAMP --> but haven't imported firebase
     // might have frontend send time?
-    let sleepInfo = {start: new Date(), in_progress: true};
+    let sleepInfo = {start: start, in_progress: true};
     sleepRef.set(sleepInfo);
     res.send('started sleep');
 
@@ -78,9 +79,10 @@ app.post('/sleeps/start', (req, res) => {
 // https://googleapis.dev/nodejs/firestore/latest/Query.html
 
 app.post('/sleeps/end', async (req, res) => {
-    const userInfo = req.body;
-    const uid = userInfo.uid;
-    if (typeof uid === 'undefined') {res.send(str_missing); return;}
+    let [missing, [uid]] = retr(req.body, ['uid']);
+    let [missing2, [end_time]] = retr(req.body, ['currTime']);
+    if (missing) {res.send(str_missing); return;}
+    if (missing2) end = new Date(); else end = new Date(end_time);
 
     const sleepCollection = await usersCollection.doc(uid).collection('sleeps');
     // find the single most recent in_progress sleep
@@ -94,10 +96,10 @@ app.post('/sleeps/end', async (req, res) => {
         sleep.start = sleep.start.toDate(); // this makes it a js Date; but do whatever format
     }
     // now update!
-    sleep.end = new Date();
+    sleep.end = end;
     sleep.in_progress = false;
     // if somehow no sleeps in progress, make a new one and end it
-    if (s_id === null) sleepCollection.doc().set({start: new Date(), ...sleep});
+    if (s_id === null) sleepCollection.doc().set({start: end, ...sleep});
     // otherwise update sleep as expected
     else sleepCollection.doc(s_id).set(sleep);
 

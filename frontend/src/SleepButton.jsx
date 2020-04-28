@@ -7,11 +7,11 @@ export default ({uid, setSleeping, sleeping}) => {
     const changeSleepStatus = () => {
         const currTime = new Date();
         if (sleeping===false) {
-        //     axios.post('/sleeps/start', {uid, currTime})
+            axios.post('/sleeps/start', {uid, currTime});
         //         .then(res => setSleeping(true));
             console.log('sleeping!')
         } else {
-            //     axios.post('/sleeps/end', {uid, currTime})
+                axios.post('/sleeps/end', {uid, currTime});
             //         .then(res => setSleeping(false));
             console.log('not sleeping!')
         }
