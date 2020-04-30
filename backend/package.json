@@ -12,6 +12,6 @@
     "express": "^4.16.4",
     "firebase": "^7.14.1",
     "firebase-admin": "^7.2.0",
-    "firebaseui": "^4.5.0"
+    "yarn-check": "^0.0.3"
   }
 }

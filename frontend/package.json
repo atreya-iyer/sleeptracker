@@ -8,15 +8,17 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
+    "bootstrap": "^4.4.1",
     "firebase": "^7.14.1",
-    "firebaseui": "^4.5.0",
     "react": "^16.13.1",
+    "react-datepicker": "^2.14.1",
     "react-dom": "^16.13.1",
     "react-firebaseui": "^4.1.0",
     "react-scripts": "3.4.1",
     "reactstrap": "^8.4.1",
     "recharts": "^1.8.5",
-    "simple-statistics": "^7.0.9"
+    "simple-statistics": "^7.0.9",
+    "yarn-check": "^0.0.3"
   },
   "scripts": {
     "start": "react-scripts start",

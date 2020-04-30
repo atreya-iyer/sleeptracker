@@ -11,9 +11,6 @@
   "author": "Elisabeth Finkel <esf76@cornell.edu>; Atreya Iyer <avi8@cornell.edu>",
   "license": "MIT",
   "dependencies": {
-    "bootstrap": "^4.4.1",
-    "concurrently": "^5.1.0",
-    "firebase-tools": "^8.1.1",
-    "react-datepicker": "^2.14.1"
+    "concurrently": "^5.1.0"
   }
 }
