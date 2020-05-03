@@ -4,7 +4,7 @@ import {
   } from 'recharts';
 
 export default ({sleeps}) => {
-    const sleepTimes = sleeps.map(x => (new Date(x.end) - new Date(x.start)) / (1000*3600)).toFixed(2);
+    const sleepTimes = sleeps.map(x => ((new Date(x.end) - new Date(x.start)) / (1000*3600)).toFixed(2));
     const data = sleeps.map(s => {return {"date":(new Date(s.end).getMonth()+1).toString()
     + "/" + new Date(s.end).getDate().toString() + "/" + new Date(s.end).getFullYear().toString(),
     "blank":"",
@@ -36,7 +36,7 @@ export default ({sleeps}) => {
         
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
-        <YAxis type="number" domain={Math.max(...sleepTimes)}/> 
+        <YAxis type="number" domain={[0,Math.max(...sleepTimes)]}/> 
         <Tooltip content = {<CustomTooltip />}/>
         <Area type="monotone" dataKey="amt" stroke="#8884d8" fill="#8884d8" />
       </AreaChart>
