@@ -2,7 +2,8 @@
   "name": "sleep",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8080",
+  "proxylocal": "http://localhost:8080",
+  "proxy": "https://morning-waters-80542.herokuapp.com",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",

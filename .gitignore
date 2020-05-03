@@ -1,2 +1,4 @@
 .DS_Store
 node_modules
+
+backend/service-account.json
