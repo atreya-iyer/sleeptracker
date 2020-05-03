@@ -36,7 +36,7 @@ export default ({sleeps}) => {
         
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" />
-        <YAxis type="number" domain={}/>
+        <YAxis type="number" domain={Math.max(...sleepTimes)}/> 
         <Tooltip content = {<CustomTooltip />}/>
         <Area type="monotone" dataKey="amt" stroke="#8884d8" fill="#8884d8" />
       </AreaChart>
