@@ -15,11 +15,11 @@ export default ({sleepTimes}) => {
     const sd = stats.standardDeviation(sleepTimes);
     return (
         <div>
-            Mean: {mean} <br />
-            Median: {median} <br />
-            Minimum: {min} <br />
-            Maximum: {max} <br />
-            Standard Deviation: {sd}
+            Mean: {mean.toFixed(1)} <br />
+            Median: {median.toFixed(1)} <br />
+            Minimum: {min.toFixed(1)} <br />
+            Maximum: {max.toFixed(1)} <br />
+            Standard Deviation: {sd.toFixed(2)}
         </div>
     );
 };

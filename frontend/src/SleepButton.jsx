@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import axios from 'axios';
 
-export default ({uid, setSleeping, sleeping}) => {
+export default ({uid, setSleeping, sleeping, fetch}) => {
         
     const changeSleepStatus = () => {
         const currTime = new Date();
@@ -11,8 +11,9 @@ export default ({uid, setSleeping, sleeping}) => {
         //         .then(res => setSleeping(true));
             console.log('sleeping!')
         } else {
-                axios.post('/sleeps/end', {uid, currTime});
+                axios.post('/sleeps/end', {uid, currTime})
             //         .then(res => setSleeping(false));
+                .then(fetch());
             console.log('not sleeping!')
         }
         setSleeping(!sleeping);

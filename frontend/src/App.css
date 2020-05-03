@@ -9,10 +9,17 @@
 
 .past-sleeps {
   border: 2px solid black;
-  margin: 20px 60px;
+  /*top/bottom; sides */
+  /* margin: 20px 60px; */
   padding: 20px 5px;
+
+  max-height: 500px;
+  overflow: scroll;
   
 }
+.floatLeft { width: 50%; float: left; }
+.floatRight {width: 50%; float: right; }
+.container { overflow: hidden; }
 
 /* .App-logo {
   height: 40vmin;

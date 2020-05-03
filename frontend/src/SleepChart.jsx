@@ -4,16 +4,16 @@ import {
   } from 'recharts';
 
 export default ({sleeps}) => {
-    const data = sleeps.map(s => {return {"date":new Date(s.end).getMonth().toString()
+    const data = sleeps.map(s => {return {"date":(new Date(s.end).getMonth()+1).toString()
     + "/" + new Date(s.end).getDate().toString() + "/" + new Date(s.end).getFullYear().toString(),
     "blank":"",
-    "amt":((new Date(s.end) - new Date(s.start)) / (1000*3600))}});
+    "amt":((new Date(s.end) - new Date(s.start)) / (1000*3600)).toFixed(2)}});
     
-    function CustomTooltip({ payload, label, active }) {
+    const CustomTooltip = ({ payload, label, active }) => {
         if (active) {
             return (
                 <div className="custom-tooltip">
-              <p className="label">{`${label} : ${payload[0].value}`}</p>
+              <p className="label">{`${label} : ${payload ? payload[0].value : ""}`}</p>
             </div>
           );
         }
@@ -24,16 +24,13 @@ export default ({sleeps}) => {
 
     return (
         <div style={{
-            position: 'absolute', left: '50%',
+            position: 'relative', left: '50%',
             transform: 'translate(-50%)'
         }}>
         <AreaChart
-        width={500}
-        height={400}
-        data={data}
-        margin={{
-          top: 10, right: 30, left: 0, bottom: 0,
-        }} >
+        width={600}
+        height={500}
+        data={data} >
 
         
         <CartesianGrid strokeDasharray="3 3" />
