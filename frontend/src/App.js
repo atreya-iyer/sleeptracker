@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import SleepInfo from './SleepInfo'
 import Login from './Login'
+import SleepChart from './SleepChart';
 
 function App() {
 
@@ -17,7 +18,8 @@ function App() {
     <div className="App">
       <h1>Sleep...</h1>
       {!loggedIn && <Login setUid={setUid} loggedIn={loggedIn} setLoggedIn={setLoggedIn} />}
-      {loggedIn ? (name + " is") : "not" } logged in
+      {/* {loggedIn ? (name + " is") : "not" } logged in */}
+      {loggedIn ? "" : "not" } logged in
       {loggedIn && <SleepInfo uid={uid} />}
     </div>
   );
