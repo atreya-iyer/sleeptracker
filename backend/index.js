@@ -31,6 +31,10 @@ const retr = (body, fields) => {
     return [missing, vals];
 };
 
+app.get('/', (req, res) => {
+    res.send('success!');
+})
+
 app.post('/sleeps/start', (req, res) => {
     // // given uid in post body, creates a new sleep for that uid at current start time 
     let [missing, [uid]] = retr(req.body, ['uid']);
@@ -83,7 +87,8 @@ app.get('/sleeps', async (req, res) => {
     // retrieve most-recently-started sleeps for a user
     let sleepCollection = usersCollection.doc(uid).collection('sleeps').orderBy('end', 'desc');
     // if given a number of results to return, set that limit
-    if (typeof num_results !== undefined) sleepCollection = sleepCollection.limit(parseInt(num_results));
+    // if (typeof num_results !== 'undefined') console.log('using limit '.concat(num_results));
+    if (typeof num_results !== 'undefined') sleepCollection = sleepCollection.limit(parseInt(num_results));
 
     // retrieve and return list
     const sleepsObj = await sleepCollection.get();
@@ -150,7 +155,7 @@ app.delete('/sleeps/:sleepid', (req, res) => {
 //          probably don't care what timezone they slept in
 //      And data they took in a diff timezone will be off, but whatever
 
-app.listen(8080, function () { console.log('app started - go to http://localhost:8080/') });
+app.listen(process.env.PORT || 8080, function () { console.log('app started - go to http://localhost:8080/') });
 
 // todo -> stuff from latest lecture
 // todo -> catch/handle errors lmao
