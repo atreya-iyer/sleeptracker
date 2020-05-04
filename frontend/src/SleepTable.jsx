@@ -10,7 +10,7 @@ export default ({uid, sleeps, updateData}) => {
     const updateSleep = (sid, st, en) => {
         // step 1: make put request
         console.log(`PUT update for ${sid}`);
-        axios.put(`/sleeps/${sid}`, {start:st, end:en, uid})
+        axios.put(`https://sleeptracker-7640d.web.app/sleeps/${sid}`, {start:st, end:en, uid})
         // step 2: update local state
         .then(r => {
             console.log(r.data);

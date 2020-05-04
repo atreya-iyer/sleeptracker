@@ -31,7 +31,7 @@ export default ({uid}) => {
         // // console.log('would be fetching sleeps');
         // console.log(`fetching sleeps for ${uid}`);
         // axios.get(`/sleeps?uid=${uid}`)   
-        axios.get(`/sleeps?uid=${uid}&num_results=7`)
+        axios.get(`https://sleeptracker-7640d.web.app/sleeps?uid=${uid}&num_results=7`)
             .then(res => {if (res.data.filter)
                     setSleeps(
                 res.data.filter(
@@ -51,7 +51,7 @@ export default ({uid}) => {
         if (!isNull(sleeping)) return;
         if (uid==="") return; 
         console.log('fetching status');
-        axios.get(`/sleeps/inprogress?uid=${uid}`)
+        axios.get(`https://sleeptracker-7640d.web.app/sleeps/inprogress?uid=${uid}`)
                 .then(res => setSleeping(res.data))
                 .catch(e => console.log(`error: ${e}`))
     }
