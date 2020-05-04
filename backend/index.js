@@ -2,6 +2,7 @@ const admin = require('firebase-admin');
 const serviceAccount = require('./service-account.json');
 const express = require('express');
 const bodyParser = require('body-parser');
+// var cors = require('cors');
 
 // docs, for future reference:
 //      https://firebase.google.com/docs/firestore/quickstart?authuser=0
@@ -17,6 +18,7 @@ admin.initializeApp({
 
 const app = express();
 app.use(bodyParser.json());
+// app.use(cors);
 
 const db = admin.firestore();
 const usersCollection = db.collection('users');
