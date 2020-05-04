@@ -2,19 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Button } from 'reactstrap';
 import axios from 'axios';
 
+
 export default ({uid, setSleeping, sleeping, fetch}) => {
+    const url = "https://morning-waters-80542.herokuapp.com";
         
     const changeSleepStatus = () => {
         const currTime = new Date();
         if (sleeping===false) {
-            axios.post('https://sleeptracker-7640d.web.app/sleeps/start', {uid, currTime})
+            axios.post(`${url}/sleeps/start`, {uid, currTime})
                 .then(
                     console.log('sleeping!')
                 )
                 .catch (e => console.log(`error: ${e}`));
                 //         .then(res => setSleeping(true));
             } else {
-                axios.post('https://sleeptracker-7640d.web.app/sleeps/end', {uid, currTime})
+                axios.post(`${url}/sleeps/end`, {uid, currTime})
                 .then(
                     console.log('not sleeping!')
                 )

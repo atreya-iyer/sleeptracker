@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "proxylocal": "http://localhost:8080",
-  "proxy": "https://morning-waters-80542.herokuapp.com",
+  "proxyserver": "https://morning-waters-80542.herokuapp.com",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
