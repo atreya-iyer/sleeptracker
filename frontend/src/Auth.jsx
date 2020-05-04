@@ -34,7 +34,7 @@ export default ({children, callback}) => {
     const onAuthStateChange = () => {
         return firebase.auth().onAuthStateChanged(user => {
             setUser(user);
-            callback(user.uid);
+            callback(user&&user.uid ? user.uid : "");
         })
     };
     useEffect(() => onAuthStateChange(), []);
