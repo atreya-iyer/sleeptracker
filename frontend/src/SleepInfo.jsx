@@ -27,18 +27,19 @@ export default ({uid}) => {
 
     const fetchSleeps = () => {
         if (uid==="") return;
-        console.log('fetchSleeps: uid is '.concat(uid));
+        console.log(`fetchSleeps: uid is ${uid}`);
         // // console.log('would be fetching sleeps');
         // console.log(`fetching sleeps for ${uid}`);
         // axios.get(`/sleeps?uid=${uid}`)   
         axios.get(`/sleeps?uid=${uid}&num_results=7`)
-            .then(res => setSleeps(
+            .then(res => {if (res.data.filter)
+                    setSleeps(
                 res.data.filter(
                     s => !s.in_progress
                 )
                 .sort((a, b) => new Date(a.end) - new Date(b.end))
-            ))
-            .then(console.log('fetched sleeps.'))
+                )})
+            .then(console.log('fetched sleeps'))
             .catch(err => {console.log(err)});
     }
     useEffect(() => fetchSleeps(), [uid]);
