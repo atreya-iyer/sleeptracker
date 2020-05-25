@@ -3,18 +3,7 @@ import 'firebase/auth';
 import * as firebase from 'firebase/app';
 // import FirebaseAuth from 'react-firebaseui/FirebaseAuth';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
-
-
-const firebaseConfig = { // cannot tell if this is supposed to be secret
-    apiKey: "AIzaSyDdbixuZRIwD9KNPpaxWZnpvgDAZJJ_Q68",
-    authDomain: "sleeptracker-7640d.firebaseapp.com",
-    databaseURL: "https://sleeptracker-7640d.firebaseio.com",
-    projectId: "sleeptracker-7640d",
-    storageBucket: "sleeptracker-7640d.appspot.com",
-    messagingSenderId: "966736500810",
-    appId: "1:966736500810:web:c28b61c3de36bedaf0eeb3",
-    measurementId: "G-M5EKQPM37H"
-};
+const firebaseConfig = require('./firebase-config.json');
 
 firebase.initializeApp(firebaseConfig);
 
